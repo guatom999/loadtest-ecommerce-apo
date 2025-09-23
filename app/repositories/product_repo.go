@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"log"
 
 	"github.com/guatom999/ecommerce-product-api/app/models"
 	"github.com/jmoiron/sqlx"
@@ -34,10 +35,12 @@ func (r *productRepo) Get(ctx context.Context, id string) (*models.Product, erro
 func (r *productRepo) List(ctx context.Context, limit, offset int) ([]models.Product, int, error) {
 	list := []models.Product{}
 	if err := r.db.SelectContext(ctx, &list, `SELECT * FROM products ORDER BY created_at DESC LIMIT $1 OFFSET $2`, limit, offset); err != nil {
+		log.Printf("failed to list products: %v", err)
 		return nil, 0, err
 	}
 	var total int
 	if err := r.db.GetContext(ctx, &total, `SELECT COUNT(*) FROM products`); err != nil {
+		log.Printf("failed to count products: %v", err)
 		return nil, 0, err
 	}
 	return list, total, nil
