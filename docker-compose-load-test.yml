@@ -1,0 +1,40 @@
+version: "3.9"
+
+name: ecommerce-api-load-test
+services:
+  influxdb-load-test:
+    image: influxdb:1.8
+    container_name: influxdb-load-test
+    environment:
+      - INFLUXDB_DB=k6
+    ports:
+      - "8087:8086"
+    volumes:
+      - influxdb-data:/var/lib/influxdb
+
+  grafana-load-test:
+    image: grafana/grafana:latest
+    container_name: grafana-load-test
+    depends_on:
+      - influxdb-load-test
+    ports:
+      - "3006:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+
+  k6:
+    image: grafana/k6:latest
+    container_name: k6
+    depends_on:
+      - influxdb-load-test
+    volumes:
+      - ./scripts:/scripts
+    working_dir: /scripts
+
+volumes:
+  influxdb-data:
+  grafana-data:
