@@ -48,8 +48,8 @@ func main() {
 	e.POST("/auth/login", authH.Login)
 
 	// Protected
-	// authMW := services.AuthMiddleware(jwtMaker)
-	g := e.Group("")
+	authMW := services.AuthMiddleware(jwtMaker)
+	g := e.Group("", authMW)
 
 	// Product
 	g.POST("/product/create", prodH.Create)
