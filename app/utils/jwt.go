@@ -21,7 +21,6 @@ func NewJWTMaker() *JWTMaker {
 	}
 	hours := 24
 	if v := os.Getenv("JWT_EXPIRE_HOURS"); v != "" {
-		// ignore parse error, keep default
 		fmtHours, _ := time.ParseDuration(v + "h")
 		if fmtHours > 0 {
 			hours = int(fmtHours.Hours())
