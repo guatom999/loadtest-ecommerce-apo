@@ -146,7 +146,7 @@ func TestProductService_Get(t *testing.T) {
 			name:      "product_not_found",
 			productID: "non-existing-id",
 			setupMock: func(mockRepo *repositories.ProductRepoMock) {
-				mockRepo.On("GetByID", mock.Anything, "non-existing-id").Return((*models.Product)(nil), errors.New("product not found"))
+				mockRepo.On("Get", mock.Anything, "non-existing-id").Return((*models.Product)(nil), errors.New("product not found"))
 			},
 			expectedErr: "product not found",
 		},
