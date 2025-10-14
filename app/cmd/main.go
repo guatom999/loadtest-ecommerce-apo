@@ -43,6 +43,14 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
 
+	e.GET("/health", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, echo.Map{
+			"status":  "healthy",
+			"service": "ecommerce-api",
+			"version": "v1.0.1",
+		})
+	})
+
 	// Public
 	e.POST("/auth/register", authH.Register)
 	e.POST("/auth/login", authH.Login)
